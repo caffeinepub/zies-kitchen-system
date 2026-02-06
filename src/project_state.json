@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Zie's Kitchen app with ongoing enhancements for cashier transaction handling.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-add-a-transaction-date-selector-to-the-cashier-kasir-page-so-the-cashier-can-choose-a-past-date-when-saving-a-transaction-defaulting-to-today",
+      "title": "Add a transaction date selector to the Cashier (Kasir) page so the cashier can choose a past date when saving a transaction, defaulting to today.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-react-query-hooks-and-types-used-by-the-kasir-page-so-the-create-transaction-mutation-sends-the-selected-transaction-date-to-the-backend-and-triggers-the-same-cache-invalidations-as-before",
+      "title": "Update React Query hooks and types used by the Kasir page so the create-transaction mutation sends the selected transaction date to the backend and triggers the same cache invalidations as before.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Allow cashier to save/create transactions dated from previous days (backdated transactions).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Update the backend transaction model and APIs so a cashier can save a transaction with an explicit transaction date/time from a previous day (backdated), instead of always using the current time.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update daily/monthly reporting logic so backdated transactions are included in the correct day and month based on the transaction date selected by the cashier.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Zie's Kitchen",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

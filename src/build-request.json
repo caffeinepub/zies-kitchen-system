@@ -1,0 +1,96 @@
+{
+  "kind": "build_request",
+  "title": "Allow cashier to save backdated transactions (previous days)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Update the backend transaction model and APIs so a cashier can save a transaction with an explicit transaction date/time from a previous day (backdated), instead of always using the current time.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Tambahkan agar kasir bisa menyimpan transaksi dari beberapa hari sebelumnya"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes an update to the transaction-create API that accepts a user-provided transaction timestamp/date for the sale (not just `Time.now()`).",
+        "Backend rejects transaction dates in the future with a clear error message.",
+        "The stored transaction includes the provided transaction date such that reporting/grouping can be based on that date rather than the creation time.",
+        "Existing authorization rules remain enforced (only permitted users can add transactions)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update daily/monthly reporting logic so backdated transactions are included in the correct day and month based on the transaction date selected by the cashier.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Tambahkan agar kasir bisa menyimpan transaksi dari beberapa hari sebelumnya"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A transaction saved with a backdated date appears in `getTransaksiHarian(...)` for that selected day, not the day it was created.",
+        "A transaction saved with a backdated date appears in `getLaporanBulanan(...)` for the corresponding month/year based on the backdated date.",
+        "The change does not break existing report queries for historical data already stored before this feature (older transactions still appear in reports)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add a transaction date selector to the Cashier (Kasir) page so the cashier can choose a past date when saving a transaction, defaulting to today.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Tambahkan agar kasir bisa menyimpan transaksi dari beberapa hari sebelumnya"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Kasir page includes a clear UI control for selecting the transaction date (default: today).",
+        "The cashier can select a date from previous days and successfully submit the transaction.",
+        "The submitted transaction uses the selected date when calling the backend mutation.",
+        "If the selected date is in the future (if user manages to pick it), the UI prevents submission or shows an error returned by the backend."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update React Query hooks and types used by the Kasir page so the create-transaction mutation sends the selected transaction date to the backend and triggers the same cache invalidations as before.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Tambahkan agar kasir bisa menyimpan transaksi dari beberapa hari sebelumnya"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`useTambahTransaksi` is updated to match the backend API signature and includes the transaction date parameter.",
+        "After saving a backdated transaction, existing queries are invalidated/refetched as they are today (transactions, reports, dashboard).",
+        "TypeScript types compile cleanly with the updated backend candid/types."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single-actor Motoko canister; keep all logic in `backend/main.mo`.",
+    "Only create `backend/migration.mo` if required to preserve/upgrade existing stable state for the updated transaction record shape.",
+    "Do not edit files under `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, or anything in `frontend/src/components/ui` (compose them instead).",
+    "Use English for any user-facing text introduced/changed as part of this feature request."
+  ],
+  "nonGoals": [
+    "Do not add new authentication providers (Internet Identity remains the only auth method).",
+    "Do not add real-time features (WebSockets/chat).",
+    "Do not redesign unrelated pages (Dashboard/Laporan/Pengeluaran) beyond what is necessary to correctly reflect backdated transactions in existing reports."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
