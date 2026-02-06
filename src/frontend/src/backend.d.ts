@@ -94,6 +94,7 @@ export interface backendInterface {
     getTransaksiHarian(timestamp: Time): Promise<LaporanHarian>;
     getTransaksiHarianByUser(timestamp: Time, user: Principal): Promise<LaporanHarian>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    hapusTransaksi(waktuPencatatan: Time): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     isLoggedIn(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;

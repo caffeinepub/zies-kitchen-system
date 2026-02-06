@@ -1,45 +1,36 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T03:06:41.893Z",
-  "summary": "The diff adds a transaction date/time field to the transaction model, updates the create-transaction hook to send a provided timestamp, and adds a date/time selector + client-side future-date validation on the Kasir page. However, backend reporting logic changes and backend-side validation/error handling cannot be confirmed from the truncated backend diff, and the migration appears to set historical transactions' dates to `Time.now()` which likely breaks correct historical reporting. There is also a direct modification to a frontend hook file that the BuildRequest explicitly forbids editing.",
+  "generatedAt": "2026-02-06T04:25:04.850Z",
+  "summary": "Build request was to publish the current version with no functional/UI changes. The diff includes backend functional changes (user profile storage/endpoints and related authorization checks) and adds new project/deployment documentation/metadata files, which goes beyond “publish only.”",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "Backend rejects transaction dates in the future with a clear error message.",
-      "reason": "The backend implementation of `tambahTransaksi` is truncated right after the authorization check, so there is no visible validation against future timestamps nor a clear error message in the shown diff.",
+      "requirement": "Build and publish the current application version without making additional functional changes.",
+      "reason": "The diff shows functional backend changes (new user profile types/state and new query/shared methods) rather than a no-change publish-only update, so the requirement of “no additional functional changes” is not met by the implementation shown.",
       "evidence": [
         "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "Update daily/monthly reporting logic so backdated transactions are included in the correct day and month based on the transaction date selected by the cashier.",
-      "reason": "The diff summary does not show any changes to `getTransaksiHarian(...)` or `getLaporanBulanan(...)` implementations (backend file is truncated before those functions), so it cannot be verified that reporting/grouping now uses `tanggalTransaksi`/provided date instead of creation time.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "The change does not break existing report queries for historical data already stored before this feature (older transactions still appear in reports).",
-      "reason": "The migration converts old transactions by setting `tanggalTransaksi` and `waktuTransaksi` to `Time.now()` rather than deriving them from the old stored transaction time (`oldTransaksi.waktu`). This likely shifts historical transactions into the current day/month, breaking historical report queries.",
-      "evidence": [
-        "backend/migration.mo"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added/updated Internet Identity hook implementation despite an explicit constraint to not edit `frontend/src/hooks/useInternetIdentity.ts`.",
-      "reason": "The BuildRequest constraints explicitly prohibit editing this file, but it appears in the modified files list.",
+      "description": "User profile feature added/modified in backend (UserProfile type, userProfiles map, get/save profile endpoints with authorization checks).",
+      "reason": "Not requested; BuildRequest explicitly constrains to publish-only with no additional functional changes and lists adding backend data fields/migrations as a non-goal.",
       "evidence": [
-        "frontend/src/hooks/useInternetIdentity.ts"
+        "backend/main.mo"
       ]
     },
     {
-      "description": "Introduced project tracking metadata file `project_state.json`.",
-      "reason": "The BuildRequest does not request adding any project state/metadata files; only backend/frontend changes for backdated transactions were requested.",
+      "description": "Added deployment checklist documentation.",
+      "reason": "Not requested as part of publish-only requirement; represents additional scope beyond “publish the current state only.”",
+      "evidence": [
+        "frontend/DEPLOYMENT_CHECKLIST.md"
+      ]
+    },
+    {
+      "description": "Added/updated internal project state tracking indicating a new feature request entry.",
+      "reason": "Not part of publishing the current version; introduces new metadata/state management content unrelated to deployment-only requirement.",
       "evidence": [
         "project_state.json"
       ]
@@ -48,12 +39,8 @@
   "confidence": 0.72,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/KasirPage.tsx",
-    "frontend/src/pages/LaporanPage.tsx",
+    "frontend/DEPLOYMENT_CHECKLIST.md",
     "project_state.json"
   ]
 }

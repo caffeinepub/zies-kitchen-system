@@ -126,6 +126,7 @@ export interface _SERVICE {
   'getTransaksiHarian' : ActorMethod<[Time], LaporanHarian>,
   'getTransaksiHarianByUser' : ActorMethod<[Time, Principal], LaporanHarian>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'hapusTransaksi' : ActorMethod<[Time], undefined>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isLoggedIn' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,

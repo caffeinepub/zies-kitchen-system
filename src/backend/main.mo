@@ -10,9 +10,7 @@ import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import Array "mo:core/Array";
 import Iter "mo:core/Iter";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   include MixinStorage();
   let accessControlState = AccessControl.initState();
@@ -660,4 +658,47 @@ actor {
 
     transaksi;
   };
+
+  public shared ({ caller }) func hapusTransaksi(waktuPencatatan : Time.Time) : async () {
+    // First check: caller must be at least a user
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can delete transactions");
+    };
+
+    // Get the transaction
+    let transaksiSelesai = transaksi.get(waktuPencatatan);
+
+    // Authorization check: admin can delete any transaction, non-admin can only delete their own
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      switch (transaksiSelesai) {
+        case (null) {
+          // Idempotent: non-existent transaction is a no-op for non-admins
+          return;
+        };
+        case (?t) {
+          switch (t.userId) {
+            case (null) {
+              Runtime.trap("Unauthorized: This transaction has no owner and can only be deleted by an admin");
+            };
+            case (?userId) {
+              if (userId != caller) {
+                Runtime.trap("Unauthorized: You can only delete your own transactions");
+              };
+            };
+          };
+        };
+      };
+    };
+
+    // Perform the deletion (idempotent: only removes if exists)
+    switch (transaksiSelesai) {
+      case (?_) {
+        transaksi.remove(waktuPencatatan);
+      };
+      case (null) {
+        // Already handled above for non-admins; for admins this is also a no-op
+      };
+    };
+  };
 };
+

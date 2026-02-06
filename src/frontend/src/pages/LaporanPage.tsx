@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Calendar as CalendarIcon, TrendingUp, Receipt, Printer, Download, TrendingDown, DollarSign, Tag } from 'lucide-react';
 import { format, startOfMonth } from 'date-fns';
 import { id } from 'date-fns/locale';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +10,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetTransaksiHarian, useGetLaporanBulanan } from '../hooks/useQueries';
+import { useGetTransaksiHarian, useGetLaporanBulanan, useHapusTransaksi } from '../hooks/useQueries';
+import { DeleteTransactionDialog } from '../components/transactions/DeleteTransactionDialog';
 import type { TransaksiSelesai, Pengeluaran } from '../backend';
 
 export default function LaporanPage() {
@@ -23,6 +25,7 @@ export default function LaporanPage() {
   
   const { data: laporanHarian, isLoading: isLoadingHarian } = useGetTransaksiHarian(dailyTimestamp);
   const { data: laporanBulanan, isLoading: isLoadingBulanan } = useGetLaporanBulanan(monthlyTimestamp);
+  const { mutateAsync: hapusTransaksi, isPending: isDeletingTransaction } = useHapusTransaksi();
 
   const formatCurrency = (amount: bigint | number) => {
     const numAmount = typeof amount === 'bigint' ? Number(amount) : amount;
@@ -41,6 +44,16 @@ export default function LaporanPage() {
   const formatDateOnly = (nanoTimestamp: bigint) => {
     const milliseconds = Number(nanoTimestamp / BigInt(1_000_000));
     return format(new Date(milliseconds), 'dd MMM yyyy', { locale: id });
+  };
+
+  const handleDeleteTransaction = async (waktuPencatatan: bigint) => {
+    try {
+      await hapusTransaksi(waktuPencatatan);
+      toast.success('Transaction deleted successfully');
+    } catch (error: any) {
+      console.error('Delete transaction error:', error);
+      toast.error(error.message || 'Failed to delete transaction');
+    }
   };
 
   const handlePrintHarian = () => {
@@ -352,11 +365,18 @@ export default function LaporanPage() {
                               {formatDateTime(transaksi.tanggalTransaksi)}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">Total</p>
-                            <p className="text-lg font-bold text-primary">
-                              {formatCurrency(transaksi.total)}
-                            </p>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <p className="text-sm text-muted-foreground">Total</p>
+                              <p className="text-lg font-bold text-primary">
+                                {formatCurrency(transaksi.total)}
+                              </p>
+                            </div>
+                            <DeleteTransactionDialog
+                              transaction={transaksi}
+                              onConfirm={() => handleDeleteTransaction(transaksi.waktuPencatatan)}
+                              isDeleting={isDeletingTransaction}
+                            />
                           </div>
                         </div>
                         <div className="rounded-md border">
@@ -628,11 +648,18 @@ export default function LaporanPage() {
                               {formatDateTime(transaksi.tanggalTransaksi)}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">Total</p>
-                            <p className="text-lg font-bold text-primary">
-                              {formatCurrency(transaksi.total)}
-                            </p>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <p className="text-sm text-muted-foreground">Total</p>
+                              <p className="text-lg font-bold text-primary">
+                                {formatCurrency(transaksi.total)}
+                              </p>
+                            </div>
+                            <DeleteTransactionDialog
+                              transaction={transaksi}
+                              onConfirm={() => handleDeleteTransaction(transaksi.waktuPencatatan)}
+                              isDeleting={isDeletingTransaction}
+                            />
                           </div>
                         </div>
                         <div className="rounded-md border">

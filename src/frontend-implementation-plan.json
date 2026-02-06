@@ -1,43 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Kasir backdated transaction date/time selection (frontend)",
+  "title": "Publish current frontend version (no functional changes)",
   "requirements": [
     {
-      "id": "REQ-3",
-      "summary": "Add a transaction date/time selector on the Kasir page (defaulting to now) and prevent/handle future dates when submitting a transaction.",
+      "id": "REQ-1",
+      "summary": "Prepare the current frontend codebase for a successful build and publish without changing existing functionality or UI behavior.",
       "acceptanceCriteria": [
-        "Kasir page includes a clear UI control for selecting the transaction date (default: today).",
-        "The cashier can select a date from previous days and successfully submit the transaction.",
-        "The submitted transaction uses the selected date when calling the backend mutation.",
-        "If the selected date is in the future (if user manages to pick it), the UI prevents submission or shows an error returned by the backend."
+        "A new build completes successfully with no build-time errors.",
+        "The newly published deployment loads successfully in the browser.",
+        "Existing functionality (including transaction deletion with confirmation dialog) remains available after publish."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/KasirPage.tsx",
-          "operation": "modify",
-          "description": "Add a controlled transaction date/time field (e.g., datetime-local) defaulting to now; convert the selected value to the backend Time bigint (nanoseconds) and pass it into the create-transaction mutation call. Add client-side validation to block future date/time selection (use input max and a runtime check) and display any backend rejection errors to the user. Ensure any newly introduced/changed user-facing text is in English."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Update React Query mutation hook and TypeScript types so create-transaction sends the selected transaction timestamp and keeps the same cache invalidations.",
-      "acceptanceCriteria": [
-        "`useTambahTransaksi` is updated to match the backend API signature and includes the transaction date parameter.",
-        "After saving a backdated transaction, existing queries are invalidated/refetched as they are today (transactions, reports, dashboard).",
-        "TypeScript types compile cleanly with the updated backend candid/types."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Update `TambahTransaksiParams` to include `tanggalTransaksiItem: bigint` (nanosecond timestamp) and adjust `useTambahTransaksi` to call `actor.tambahTransaksi(tanggalTransaksiItem, items, jumlahPembayaranOrNull, kembalianOrNull)` per the backend interface, while preserving existing React Query cache invalidations (transactions, reports, dashboard)."
-        },
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Align the generated/checked-in frontend backend typings with the updated backend API so TypeScript compiles cleanly (ensure `tambahTransaksi` signature includes the transaction timestamp/date parameter in the correct position and types)."
+          "path": "frontend/DEPLOYMENT_CHECKLIST.md",
+          "operation": "create",
+          "description": "Add a short, non-functional publish checklist for building and deploying the current frontend as-is (e.g., install deps, run build, verify app loads, smoke-test key flows like transaction deletion confirmation). No UI/logic changes; documentation only."
         }
       ]
     }

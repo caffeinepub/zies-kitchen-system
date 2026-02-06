@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-transaction-date-selector-to-the-cashier-kasir-page-so-the-cashier-can-choose-a-past-date-when-saving-a-transaction-defaulting-to-today",
-      "featureTitle": "Add a transaction date selector to the Cashier (Kasir) page so the cashier can choose a past date when saving a transaction, defaulting to today.",
+      "featureId": "feature-build-and-publish-the-current-application-version-without-making-additional-functional-changes",
+      "featureTitle": "Build and publish the current application version without making additional functional changes.",
       "files": [
-        "frontend/src/pages/KasirPage.tsx"
+        "frontend/DEPLOYMENT_CHECKLIST.md"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,27 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-react-query-hooks-and-types-used-by-the-kasir-page-so-the-create-transaction-mutation-sends-the-selected-transaction-date-to-the-backend-and-triggers-the-same-cache-invalidations-as-before",
-      "featureTitle": "Update React Query hooks and types used by the Kasir page so the create-transaction mutation sends the selected transaction date to the backend and triggers the same cache invalidations as before.",
-      "files": [
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
+        "REQ-1"
       ],
       "confidence": "high"
     }

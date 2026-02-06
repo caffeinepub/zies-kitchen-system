@@ -70,6 +70,23 @@ export function useTambahTransaksi() {
   });
 }
 
+export function useHapusTransaksi() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (waktuPencatatan: bigint) => {
+      if (!actor) throw new Error('Actor not initialized');
+      return actor.hapusTransaksi(waktuPencatatan);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transaksi'] });
+      queryClient.invalidateQueries({ queryKey: ['laporan'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+}
+
 export function useTambahPengeluaran() {
   const { actor } = useActor();
   const queryClient = useQueryClient();

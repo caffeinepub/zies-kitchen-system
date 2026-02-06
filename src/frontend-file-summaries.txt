@@ -1,10 +1,10 @@
 {
   "frontend/src/App.tsx": "Main application component with TanStack Router setup, ThemeProvider integration, authentication guard that shows LoginPage for unauthenticated users, and ProfileSetup modal for first-time users.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend integration with updated useTambahTransaksi mutation to include tanggalTransaksiItem parameter for backdated transaction support, and useTambahPengeluaran mutation for expense management.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend integration including useHapusTransaksi mutation for deleting transactions with proper cache invalidation for reports, dashboard, and transaction lists.",
   "frontend/src/components/Header.tsx": "Header component with centered \"Zie's Kitchen\" branding, bottom navigation menu, and user dropdown menu displaying user name, principal ID, and logout button.",
   "frontend/src/components/Footer.tsx": "Footer component with copyright notice and caffeine.ai attribution link.",
   "frontend/src/pages/KasirPage.tsx": "Main cashier page with product input form, shopping cart display, transaction date/time selector (defaulting to now with max validation to prevent future dates), payment amount and change calculation fields with validation, and transaction completion functionality.",
-  "frontend/src/pages/LaporanPage.tsx": "Sales and expense report page with tabs for daily and monthly reports, displaying detailed transaction data using tanggalTransaksi field, expense data with kategori badges, tanggal, deskripsi, jumlah, and catatan columns, plus category breakdown for monthly reports with print and CSV export functionality.",
+  "frontend/src/pages/LaporanPage.tsx": "Sales and expense report page with tabs for daily and monthly reports, now including delete buttons with confirmation dialogs for each transaction entry, showing success/error toasts and auto-refreshing data via React Query invalidation.",
   "frontend/src/index.css": "Global styles with OKLCH color system for teal/cyan theme in light and dark modes, plus print media queries for proper report printing.",
   "frontend/src/pages/DashboardPage.tsx": "Dashboard page displaying comprehensive financial summary cards, transaction counts, expense category breakdowns, bar charts, and personalized welcome message with user's name.",
   "frontend/index.html": "HTML entry point with PWA meta tags, manifest link, service worker registration, and proper mobile app configuration for Android installation.",
@@ -13,5 +13,7 @@
   "frontend/src/components/InstallPrompt.tsx": "React component displaying an install prompt banner on mobile devices with dismiss functionality and localStorage persistence.",
   "frontend/src/components/ProfileSetup.tsx": "Profile setup modal that prompts authenticated users without a profile to enter their name on first login, with proper initialization state handling.",
   "frontend/src/pages/PengeluaranPage.tsx": "Expense management page with enhanced form including kategori dropdown, tanggal date picker, and catatan textarea fields, displaying expenses in a detailed table with all new columns.",
-  "frontend/src/pages/LoginPage.tsx": "Login page component with Internet Identity authentication button, app feature list, and responsive design for multi-device access."
+  "frontend/src/pages/LoginPage.tsx": "Login page component with Internet Identity authentication button, app feature list, and responsive design for multi-device access.",
+  "frontend/src/components/transactions/DeleteTransactionDialog.tsx": "Reusable AlertDialog component for confirming transaction deletion with transaction details display, loading state, and English copy for title and buttons.",
+  "frontend/DEPLOYMENT_CHECKLIST.md": "Deployment checklist document with pre-build verification steps, build process instructions, post-deployment smoke tests for authentication, core functionality, UI/UX, and PWA features, plus rollback plan."
 }

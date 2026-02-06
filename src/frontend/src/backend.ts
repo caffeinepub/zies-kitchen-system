@@ -194,6 +194,7 @@ export interface backendInterface {
     getTransaksiHarian(timestamp: Time): Promise<LaporanHarian>;
     getTransaksiHarianByUser(timestamp: Time, user: Principal): Promise<LaporanHarian>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    hapusTransaksi(waktuPencatatan: Time): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     isLoggedIn(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
@@ -565,6 +566,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getUserProfile(arg0);
             return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async hapusTransaksi(arg0: Time): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.hapusTransaksi(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.hapusTransaksi(arg0);
+            return result;
         }
     }
     async isCallerAdmin(): Promise<boolean> {
